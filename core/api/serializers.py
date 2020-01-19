@@ -1,3 +1,4 @@
+from rest_framework.fields import SerializerMethodField
 from rest_framework.serializers import ModelSerializer
 from core.models import PontoTuristico
 from atracoes.api.serializers import AtracaoSerializer
@@ -11,9 +12,15 @@ class PontoTuristicoSerializer(ModelSerializer):
     comentarios = ComentarioSerializer(many=True)
     endereco = EnderecoSerializer()
     avaliacoes = AvaliacaoSerializer(many=True)
+    descricao_completa = SerializerMethodField()
+
 
     class Meta:
         model = PontoTuristico
         fields = ('id', 'nome', 'descricao', 'aprovado', 'foto',
                   'recursos', 'comentarios', 'avaliacoes',
-                  'endereco')
+                  'endereco', 'descricao_completa', 'descricao_completa2'
+                  )
+
+    def get_descricao_completa(self, obj):
+        return '%s - %s' % (obj.nome, obj.descricao)
